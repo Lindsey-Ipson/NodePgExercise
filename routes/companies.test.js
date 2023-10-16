@@ -8,6 +8,7 @@ beforeEach(createData);
 afterEach(async () => {
   await db.query(`DELETE FROM companies`);
   await db.query(`DELETE FROM invoices`);
+  await db.query(`DELETE FROM industries`);
 });
 
 afterAll(async () => {
@@ -32,11 +33,12 @@ describe('GET /:code', () => {
     const resp = await request(app).get('/companies/code1');
     expect(resp.statusCode).toBe(200);
     expect(resp.body).toEqual({
-      "company": {
+      company: {
         code: 'code1',
         name: 'Comp1',
         description: 'Decscription1',
-        invoices: [1]
+        invoices: [ 1 ],
+        industries: []
       }
     });
   });
@@ -49,14 +51,13 @@ describe('GET /:code', () => {
 describe('POST /', () => {
   test('It should create a new company and return that company', async () => {
     const resp = await request(app).post('/companies').send({
-      code: 'code3',
       name: 'Comp3',
       description: 'Decscription3'
     });
     expect(resp.statusCode).toBe(201);
     expect(resp.body).toEqual({
       company: {
-        code: 'code3',
+        code: 'comp3',
         name: 'Comp3',
         description: 'Decscription3'
       }
@@ -117,4 +118,3 @@ describe('DELETE /:code', () => {
     expect(resp.statusCode).toBe(404);
   });
 });
-

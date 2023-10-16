@@ -8,6 +8,7 @@ beforeEach(createData);
 afterEach(async () => {
   await db.query(`DELETE FROM companies`);
   await db.query(`DELETE FROM invoices`);
+  await db.query(`DELETE FROM industries`);
 });
 
 afterAll(async () => {
@@ -17,7 +18,6 @@ afterAll(async () => {
 describe('GET /', () => {
   test('It should return an array of invoices', async () => {
     const resp = await request(app).get('/invoices');
-    console.log('resp.body', resp.body);
     expect(resp.statusCode).toBe(200);
     expect(resp.body).toEqual({
       invoices: [
@@ -83,7 +83,8 @@ describe('POST /', () => {
 describe('PUT /:id', () => {
   test('It should update an existing invoice and return that invoice', async () => {
     const resp = await request(app).put('/invoices/1').send({
-      amt: 500
+      amt: 500,
+      paid: false
     });
     expect(resp.statusCode).toBe(200);
     expect(resp.body).toEqual({
